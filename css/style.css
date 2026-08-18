@@ -1,0 +1,663 @@
+/* ============ 全局 ============ */
+:root {
+    --color-bg: #f7f8fa;
+    --color-surface: #ffffff;
+    --color-text: #1a1a1a;
+    --color-text-muted: #6b7280;
+    --color-primary: #2563eb;
+    --color-primary-hover: #1d4ed8;
+    --color-accent: #ef4444;        /* 最低价高亮 */
+    --color-accent-bg: #fef2f2;     /* 最低价卡片背景 */
+    --color-border: #e5e7eb;
+    --color-watermark-bg: #fef9c3;
+    --color-watermark-text: #854d0e;
+
+    --radius: 12px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+.hidden { display: none !important; }
+
+/* ============ Header / Footer ============ */
+.site-header {
+    padding: 32px 0 24px;
+    text-align: center;
+}
+.site-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--color-primary);
+    letter-spacing: -0.5px;
+}
+.site-tagline {
+    margin-top: 4px;
+    color: var(--color-text-muted);
+    font-size: 14px;
+}
+
+.site-footer {
+    margin-top: 48px;
+    padding: 24px 0;
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 12px;
+    border-top: 1px solid var(--color-border);
+}
+.site-footer a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+}
+.site-footer a:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+/* ============ 搜索摘要（结果状态显示，替代完整搜索栏）============ */
+.search-summary {
+    margin-top: 16px;
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.summary-content {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--color-text);
+    min-width: 0;
+}
+.summary-hotel {
+    font-weight: 600;
+    color: var(--color-text);
+}
+.summary-dates,
+.summary-people {
+    color: var(--color-text-muted);
+}
+.summary-sep {
+    color: var(--color-border);
+}
+.modify-btn {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+}
+.modify-btn:hover {
+    border-color: var(--color-text);
+    background: var(--color-text);
+    color: #fff;
+}
+
+/* 搜索栏折叠状态（结果页时） */
+.search-section.collapsed {
+    display: none;
+}
+
+/* ============ 搜索区 ============ */
+.search-section { margin-top: 24px; }
+.search-form {
+    background: var(--color-surface);
+    padding: 14px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.search-row {
+    display: flex;
+    gap: 8px;
+}
+.search-row.search-meta {
+    flex-wrap: wrap;
+}
+.search-field {
+    flex: 1;
+    min-width: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.search-field-narrow {
+    flex: 0 0 80px;
+}
+.search-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.search-input {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 16px;       /* 避免 iOS 缩放 */
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.15s;
+    background: #fff;
+    color: var(--color-text);
+    font-family: inherit;
+}
+.search-input-sm {
+    padding: 8px 10px;
+    font-size: 14px;
+}
+
+/* 日期触发区：让点击整个区域都能弹日历 */
+.date-trigger {
+    cursor: pointer;
+    display: flex;
+}
+.date-trigger input {
+    pointer-events: auto;       /* 保留原生输入行为 */
+}
+.search-input:focus { border-color: var(--color-primary); }
+
+.search-btn-full {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--color-primary);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+    font-family: inherit;
+}
+.search-btn-full:hover { background: var(--color-primary-hover); }
+.search-btn-full:disabled {
+    background: var(--color-text-muted);
+    cursor: not-allowed;
+}
+
+.search-hint {
+    color: var(--color-text-muted);
+    font-size: 12px;
+    text-align: center;
+}
+
+/* 儿童字段：包含 select + 动态年龄字段，垂直布局 */
+.children-field {
+    /* 占用更多宽度，让年龄字段能放下 */
+    flex: 0 0 auto;
+    min-width: 90px;
+}
+.children-ages {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 2px;
+    width: 100%;
+}
+.children-ages .search-field {
+    flex: 0 0 auto;
+    min-width: 0;
+    gap: 2px;
+}
+.children-ages .search-field .search-input-sm {
+    padding: 6px 8px;
+    font-size: 13px;
+    min-width: 76px;
+    width: 100%;
+}
+.children-ages .search-field .search-label {
+    font-size: 10px;
+}
+
+/* ============ 加载态 ============ */
+.loading {
+    margin-top: 24px;
+    padding: 32px;
+    text-align: center;
+    color: var(--color-text-muted);
+}
+.spinner {
+    width: 32px;
+    height: 32px;
+    margin: 0 auto 12px;
+    border: 3px solid var(--color-border);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============ 结果区 ============ */
+.results-section { margin-top: 24px; }
+
+.results-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.results-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+}
+.results-subtitle {
+    margin-top: 2px;
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+.results-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.results-count {
+    color: var(--color-text-muted);
+    font-size: 13px;
+}
+.results-watermark {
+    padding: 2px 8px;
+    background: var(--color-watermark-bg);
+    color: var(--color-watermark-text);
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 4px;
+}
+
+/* ============ 工具栏（排序 + 来源筛选）============ */
+.results-toolbar {
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.toolbar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.toolbar-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+    min-width: 32px;
+}
+
+/* 分段控件（互斥单选） */
+.seg-control {
+    display: inline-flex;
+    background: #f3f4f6;
+    border-radius: 8px;
+    padding: 2px;
+    gap: 2px;
+}
+.seg-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.seg-btn:hover { color: var(--color-text); }
+.seg-btn.active {
+    background: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+
+/* 来源筛选（多选切换）—— 黑白灰风格，与排序统一 */
+.source-toggles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.source-toggle {
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    background: transparent;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;        /* pill 形状 */
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.source-toggle:hover {
+    border-color: var(--color-text-muted);
+    color: var(--color-text);
+}
+.source-toggle.active {
+    background: #374151;               /* 深灰底（gray-700） */
+    color: #fff;
+    border-color: var(--color-text);   /* 边框保留深色呼应 */
+}
+.source-toggle.disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+
+/* 按房型分组 —— Grid 布局：桌面横向并排，手机单列 */
+.results-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 10px;
+}
+.room-group {
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 0;            /* grid gap 已经处理间距 */
+    overflow: hidden;
+}
+.room-group-title {
+    padding: 6px 12px;
+    background: #f3f4f6;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.result-list { padding: 0; }
+
+/* 单条报价 */
+.result-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 1px solid var(--color-border);
+    transition: background 0.15s;
+}
+.result-card:last-child { border-bottom: none; }
+.result-card:hover { background: #fafafa; }
+
+.result-source {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+.source-icon {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+.source-info { min-width: 0; }
+.source-name {
+    font-size: 12px;
+    font-weight: 600;
+}
+.source-currency {
+    font-size: 10px;
+    color: var(--color-text-muted);
+    margin-left: 6px;
+    font-weight: normal;
+}
+
+.result-price-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.result-price-main {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1px;
+    text-align: right;
+}
+.result-price {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-text);
+}
+.result-price-meta {
+    font-size: 10px;
+    color: var(--color-text-muted);
+    font-weight: normal;
+}
+.result-price-estimate {
+    font-size: 10px;
+    padding: 1px 5px;
+    background: #f3f4f6;
+    color: var(--color-text-muted);
+    border-radius: 4px;
+}
+.result-arrow {
+    color: var(--color-text-muted);
+    font-size: 12px;
+}
+
+/* 最低价高亮 */
+.result-card.is-lowest {
+    background: var(--color-accent-bg);
+}
+.result-card.is-lowest .result-price {
+    color: var(--color-accent);
+    position: relative;
+}
+.lowest-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    margin-left: 8px;
+    background: var(--color-accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 4px;
+    vertical-align: middle;
+}
+
+.results-footer {
+    margin-top: 8px;
+    color: var(--color-text-muted);
+    font-size: 12px;
+    text-align: center;
+}
+
+/* ============ 空态 / 错误 ============ */
+.empty-state, .error-state {
+    margin-top: 32px;
+    padding: 32px;
+    text-align: center;
+    color: var(--color-text-muted);
+}
+.error-state p { color: var(--color-accent); }
+
+/* 搜不到结果的空态 */
+.no-results-state {
+    margin-top: 32px;
+    padding: 32px 20px;
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+}
+.no-results-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+.no-results-state h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+.no-results-state p {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+.popular-hotels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+.popular-chip {
+    padding: 6px 12px;
+    font-size: 13px;
+    background: #f3f4f6;
+    border: none;
+    border-radius: 999px;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.popular-chip:hover { background: #e5e7eb; }
+
+/* ============ 响应式：窄屏退化 ============ */
+/* 手机宽度 < 640px 时，结果区回到单列堆叠，搜索 meta 也变紧凑 */
+@media (max-width: 640px) {
+    .container { max-width: 720px; }
+    .results-list {
+        grid-template-columns: 1fr;
+    }
+    .search-field-narrow {
+        flex: 1;
+        min-width: 80px;
+    }
+}
+
+/* "恢复全部来源"链接按钮 */
+.link-btn {
+    margin-top: 12px;
+    padding: 0;
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+.link-btn:hover { color: var(--color-primary-hover); }
+
+/* ============ About / Privacy 页面文章样式 ============ */
+.page-article {
+    margin-top: 32px;
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    padding: 32px;
+    box-shadow: var(--shadow-sm);
+    color: var(--color-text);
+    line-height: 1.7;
+}
+.page-article h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+.page-article h2 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-top: 28px;
+    margin-bottom: 10px;
+    color: var(--color-text);
+}
+.page-article p {
+    margin-bottom: 12px;
+    color: var(--color-text);
+}
+.page-article ul {
+    margin: 0 0 14px 0;
+    padding-left: 22px;
+}
+.page-article li {
+    margin-bottom: 6px;
+}
+.page-article em {
+    color: var(--color-text-muted);
+    font-style: normal;
+}
+.page-article .hl {
+    background: #fef9c3;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-weight: 600;
+}
+.page-article a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+.page-article a:hover { text-decoration: underline; }
+.page-article .updated {
+    color: var(--color-text-muted);
+    font-size: 13px;
+    margin-bottom: 16px;
+}
+
+.page-nav {
+    margin: 24px 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.page-nav a {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-size: 14px;
+    padding: 8px 14px;
+    background: var(--color-surface);
+    border-radius: 999px;
+    border: 1px solid var(--color-border);
+    transition: all 0.15s;
+}
+.page-nav a:hover {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    color: #fff;
+}

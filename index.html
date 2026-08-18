@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#2563eb">
+    <title>Pricer · 酒店比价 · 找到最低价</title>
+    <meta name="description" content="输入酒店名，一键对比各 OTA 和酒店官网的房型报价，自动高亮最低价。">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Pricer</h1>
+            <p class="site-tagline">一个房间 · 多家来源 · 找到最低价</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- ============ 搜索区 ============ -->
+        <section class="search-section" id="search-section" aria-label="搜索酒店">
+            <form id="search-form" class="search-form" autocomplete="off">
+                <div class="search-row">
+                    <input
+                        type="text"
+                        id="hotel-input"
+                        name="hotel"
+                        class="search-input"
+                        placeholder="输入酒店名，例如：Hilton Tokyo / 上海外滩茂悦大酒店"
+                        aria-label="酒店名称"
+                        required
+                    >
+                </div>
+                <div class="search-row search-meta">
+                    <div class="search-field">
+                        <label class="search-label" for="checkin-input">入住</label>
+                        <div class="date-trigger" data-target="checkin-input">
+                            <input type="date" id="checkin-input" name="checkin" class="search-input search-input-sm" required>
+                        </div>
+                    </div>
+                    <div class="search-field">
+                        <label class="search-label" for="checkout-input">离店</label>
+                        <div class="date-trigger" data-target="checkout-input">
+                            <input type="date" id="checkout-input" name="checkout" class="search-input search-input-sm" required>
+                        </div>
+                    </div>
+                    <div class="search-field search-field-narrow">
+                        <label class="search-label" for="adults-select">成人</label>
+                        <select id="adults-select" name="adults" class="search-input search-input-sm">
+                            <option>1</option>
+                            <option selected>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                        </select>
+                    </div>
+                    <div class="search-field search-field-narrow children-field">
+                        <label class="search-label" for="children-select">儿童</label>
+                        <select id="children-select" name="children" class="search-input search-input-sm">
+                            <option selected>0</option>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                        </select>
+                        <!-- 年龄字段直接挂在儿童 select 下方，视觉上属于同一组 -->
+                        <div id="children-ages" class="children-ages hidden"></div>
+                    </div>
+                </div>
+                <button type="submit" class="search-btn-full" id="search-btn">
+                    <span class="btn-label">Search</span>
+                </button>
+                <p class="search-hint">支持中英文酒店名 · 当前为示例数据，接入 Booking 后显示真实报价</p>
+            </form>
+        </section>
+
+        <!-- ============ 搜索摘要：结果状态时显示，替代完整搜索栏 ============ -->
+        <section id="search-summary" class="search-summary hidden" aria-label="当前搜索条件">
+            <div class="summary-content">
+                <span class="summary-hotel" id="summary-hotel">—</span>
+                <span class="summary-sep">·</span>
+                <span class="summary-dates" id="summary-dates">—</span>
+                <span class="summary-sep">·</span>
+                <span class="summary-people" id="summary-people">—</span>
+            </div>
+            <button type="button" class="modify-btn" id="modify-btn">修改</button>
+        </section>
+
+        <!-- ============ 加载态 ============ -->
+        <section id="loading" class="loading hidden" aria-live="polite">
+            <div class="spinner"></div>
+            <p>正在拉取各家报价…</p>
+        </section>
+
+        <!-- ============ 结果区 ============ -->
+        <section id="results" class="results-section hidden" aria-label="比价结果">
+            <header class="results-header">
+                <div class="results-header-text">
+                    <h2 id="results-title">比价结果</h2>
+                    <p id="results-subtitle" class="results-subtitle hidden"></p>
+                </div>
+                <div class="results-meta">
+                    <span id="results-count" class="results-count"></span>
+                    <span id="results-watermark" class="results-watermark">示例数据</span>
+                </div>
+            </header>
+
+            <!-- ============ 工具栏：排序 + 来源筛选 ============ -->
+            <div class="results-toolbar" id="results-toolbar">
+                <div class="toolbar-row">
+                    <span class="toolbar-label">排序</span>
+                    <div class="seg-control" id="sort-control" role="group" aria-label="价格排序">
+                        <button type="button" class="seg-btn active" data-order="default">默认</button>
+                        <button type="button" class="seg-btn" data-order="asc">价格 ↑</button>
+                        <button type="button" class="seg-btn" data-order="desc">价格 ↓</button>
+                    </div>
+                </div>
+                <div class="toolbar-row">
+                    <span class="toolbar-label">来源</span>
+                    <div class="source-toggles" id="source-toggles" role="group" aria-label="来源筛选">
+                        <!-- 由 app.js 根据当前结果动态渲染 -->
+                    </div>
+                </div>
+            </div>
+
+            <div id="results-list" class="results-list" role="list">
+                <!-- 由 app.js 渲染 -->
+            </div>
+            <footer class="results-footer">
+                <p>价格口径：含税总价 / 每晚（不含早餐 / 取消政策以各来源页面为准）</p>
+            </footer>
+        </section>
+
+        <!-- ============ 空态：搜不到结果 ============ -->
+        <section id="no-results" class="no-results-state hidden">
+            <div class="no-results-icon" aria-hidden="true">🔍</div>
+            <h3 id="no-results-title">没找到相关酒店的报价</h3>
+            <p id="no-results-hint">可以试试下面的热门酒店，或者换个关键词再搜</p>
+            <div id="popular-hotels" class="popular-hotels">
+                <!-- 由 app.js 渲染 -->
+            </div>
+        </section>
+
+        <!-- ============ 空态：初始 ============ -->
+        <section id="empty" class="empty-state">
+            <p>请输入酒店名开始搜索</p>
+        </section>
+        <section id="error" class="error-state hidden">
+            <p id="error-msg">出错了，请稍后再试</p>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>
+                Pricer · 个人项目 · 数据接入 Booking Affiliate 等合作方 ·
+                <a href="about.html">关于</a> · <a href="privacy.html">隐私</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- ============ 脚本 ============ -->
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

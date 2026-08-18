@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2563eb">
+    <title>About · Pricer · 酒店比价工具</title>
+    <meta name="description" content="Pricer 是一个酒店比价工具，输入酒店名即可对比 Booking、Agoda、Expedia 等多家 OTA 和酒店官网的房型报价。">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Pricer</h1>
+            <p class="site-tagline">一个房间 · 多家来源 · 找到最低价</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="page-article">
+            <h1>关于 Pricer</h1>
+
+            <p>Pricer 是一个<span class="hl">酒店比价工具</span>。输入酒店名，就能看到这家酒店在不同 OTA（Booking、Agoda、Expedia、携程等）和酒店官网上的报价，自动高亮最低价。</p>
+
+            <h2>为什么做这个</h2>
+            <p>订酒店时，同一个房间在 Booking 上 ¥888、Agoda 上 ¥920、酒店官网 ¥850——手动对比至少打开 5 个标签页，而且要选相同的入住/离店日期、相同的人数条件。对比一次下来要十几分钟。</p>
+            <p>Pricer 把这个流程压缩到 <strong>输入酒店名 + 选日期 → 看结果</strong>，几秒完成。</p>
+
+            <h2>使用场景</h2>
+            <ul>
+                <li><strong>个人出行</strong>：订自己的酒店，对比同房型不同渠道的报价</li>
+                <li><strong>商务差旅</strong>：替公司订房，挑找能开正规发票的渠道</li>
+                <li><strong>家庭旅行</strong>：多人多儿童，需要看具体房型适合多少人</li>
+            </ul>
+
+            <h2>数据来源</h2>
+            <p>目前接入：</p>
+            <ul>
+                <li><strong>Booking.com</strong> 通过 Booking Affiliate Partner Program（已申请中）</li>
+                <li><strong>Agoda</strong> 通过 Agoda Partners API（计划接入）</li>
+                <li><strong>Expedia</strong> 通过 EAN Affiliate Network（可选）</li>
+            </ul>
+            <p>展示中标注"示例数据"的水印表示当前是 mock 数据，接入真实 API 后会替换。</p>
+
+            <h2>国内 OTA</h2>
+            <p>携程、美团、飞猪、去哪儿<strong>暂无公开搜索 API</strong>。这些平台的反爬机制严格、价格通常客户端渲染、且 ToS 不允许自动化抓取。短期内不接入这些渠道。</p>
+
+            <h2>技术栈</h2>
+            <p>纯 HTML + CSS + Vanilla JavaScript，<strong>无构建工具、无 npm、无框架</strong>。一个文件就能跑，方便审阅代码逻辑，也方便部署到 GitHub Pages。</p>
+
+            <h2>隐私</h2>
+            <p>Pricer <strong>不收集、不存储</strong>任何个人身份信息。搜索条件只在浏览器本地临时使用，结果来自第三方 API。详见 <a href="privacy.html">隐私声明</a>。</p>
+
+            <h2>联系</h2>
+            <p>有问题或建议？欢迎通过 GitHub Issues 反馈。</p>
+        </article>
+
+        <nav class="page-nav">
+            <a href="index.html">← 返回比价工具</a>
+            <a href="privacy.html">隐私声明 →</a>
+        </nav>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Pricer · 个人项目 · 数据接入 Booking Affiliate 等合作方</p>
+        </div>
+    </footer>
+</body>
+</html>
